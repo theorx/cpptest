@@ -13,6 +13,10 @@ tcp::socket& Session::socket() {
     return socket_;
 }
 
+/**
+ * 
+ * @param io_service
+ */
 Session::Session(boost::asio::io_service& io_service) : socket_(io_service) {
 
 };
@@ -33,6 +37,23 @@ void Session::start() {
  * @param bytes_transferred
  */
 void Session::handle_read(const boost::system::error_code& error, size_t bytes_transferred) {
+
+
+    if ((boost::asio::error::eof == error) ||
+            (boost::asio::error::connection_reset == error)) {
+        // this->session_pool_.
+        std::cout << "Disconnected.." << std::endl;
+
+        //todo handle disconnected client
+
+        //   std::vector<Session*> pool = *session_pool_;
+
+        //   std::vector<Session*>::iterator iter;
+        /*    for(iter = pool.begin(); iter != pool.end();){
+                std::cout << " Item.. " << std::endl;
+            }*/
+
+    }
 
     char buffer[bytes_transferred / sizeof (char)];
     strncpy(buffer, this->data_, bytes_transferred);
@@ -66,6 +87,18 @@ void Session::handle_write(const boost::system::error_code& error) {
     }
 }
 
+/**
+ * 
+ * @param dispatcher
+ */
 void Session::setDispatcher(Dispatcher* dispatcher) {
     this->dispatcher_ = dispatcher;
+}
+
+/**
+ * 
+ * @param pool
+ */
+void Session::setSessionPool(std::vector<Session*>* pool) {
+    this->session_pool_ = pool;
 }

@@ -17,9 +17,11 @@ void Server::handle_accept(Session* new_session, const boost::system::error_code
 
     std::cout << "Incoming connection.." << std::endl;
     if (!error) {
+
         new_session->setDispatcher(this->dispatcher_);
         new_session->start();
         new_session = new Session(this->io_service_);
+        this->sessions_.push_back(new_session);
         this->acceptor_.async_accept(new_session->socket(),
                 boost::bind(&Server::handle_accept, this, new_session,
                 boost::asio::placeholders::error));

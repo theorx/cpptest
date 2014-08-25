@@ -10,13 +10,14 @@
 
 #include <iostream>
 #include <string>
+#include <stdio.h>
 
 class HandlerBase {
 public:
     HandlerBase();
     HandlerBase(const HandlerBase& orig);
     virtual ~HandlerBase();
-    void run(std::string message, std::string *result);
+    virtual void run(std::string message, std::string *result);
 private:
 
 };

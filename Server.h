@@ -5,6 +5,7 @@
 #include <boost/asio.hpp>
 #include "Session.h"
 #include "Dispatcher.h"
+#include <vector>
 
 
 using boost::asio::ip::tcp;
@@ -19,6 +20,7 @@ private:
     boost::asio::io_service& io_service_;
     tcp::acceptor acceptor_;
     Dispatcher *dispatcher_;
+    std::vector< Session* > sessions_;
 };
 
 #endif	/* SERVER_H */

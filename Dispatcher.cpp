@@ -68,6 +68,12 @@ void Dispatcher::registerHandler(std::string name, HandlerBase* handler) {
  * @param result
  */
 void Dispatcher::handle(std::string message, std::string *result) {
+    //Remove newline characters
+    for (int i = 0; i < message.length(); i++) {
+        if (message[i] == '\n') {
+            message[i] = ' ';
+        }
+    }
     std::string body;
     std::string action;
     parseMessage(message, action, body);
@@ -119,6 +125,9 @@ void Dispatcher::parseMessage(std::string input, std::string& action, std::strin
         token = strtok(NULL, " ");
         number++;
     }
+
+    if (action.length() == 0)
+        action = input;
 
     for (std::vector<std::string>::iterator it = bodyVec.begin(); it != bodyVec.end(); ++it) {
         if (body.length() > 0) body.append(" ");

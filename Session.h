@@ -22,6 +22,7 @@ public:
     void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
     void handle_write(const boost::system::error_code& error);
     void setDispatcher(Dispatcher *dispatcher);
+    void setSessionPool(std::vector<Session*> *pool);
 
 private:
     tcp::socket socket_;
@@ -31,6 +32,7 @@ private:
     };
     char data_[max_length];
     Dispatcher *dispatcher_;
+    std::vector<Session *> *session_pool_;
 };
 
 #endif	/* SERVER_H */
