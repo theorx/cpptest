@@ -1,5 +1,5 @@
 #include "Session.h"
-#include "Dispatcher.h"
+
 /**
  * Session class is for handling service IO
  * @return 
@@ -38,31 +38,33 @@ void Session::start() {
  */
 void Session::handle_read(const boost::system::error_code& error, size_t bytes_transferred) {
 
-
     if ((boost::asio::error::eof == error) ||
             (boost::asio::error::connection_reset == error)) {
         // this->session_pool_.
-        std::cout << "Disconnected.." << std::endl;
+        std::cout << "[System] Client Disconnected." << std::endl;
 
-        //todo handle disconnected client
+        //Check if pointer is valid
+        if (this->session_pool) {
+            //Remove current session from pool when client disconnects.
+            std::vector<Session*>::iterator iter = this->session_pool->begin();
+            for (iter; iter != this->session_pool->end(); ++iter) {
+                if (this == (*iter)) {
+                    std::cout << "[System] Removed client from session pool." << std::endl;
+                    this->session_pool->erase(iter);
+                }
+            }
 
-        //   std::vector<Session*> pool = *session_pool_;
-
-        //   std::vector<Session*>::iterator iter;
-        /*    for(iter = pool.begin(); iter != pool.end();){
-                std::cout << " Item.. " << std::endl;
-            }*/
-
+        }
     }
 
-    char buffer[bytes_transferred / sizeof (char)];
-    strncpy(buffer, this->data_, bytes_transferred);
-
     if (!error) {
+        //Pass message to dispatcher for parsing and dispatching with handler
         std::string result;
         std::string message = this->data_;
-        this->dispatcher_->handle(message, &result);
-        this->data_[0] = '\0';
+
+        memset(this->data_, 0, sizeof (this->data_));
+        this->dispatcher_->handle(message, &result, this, this->session_pool);
+
         boost::asio::async_write(this->socket_,
                 boost::asio::buffer(result.c_str(), result.length()),
                 boost::bind(&Session::handle_write, this,
@@ -95,10 +97,3 @@ void Session::setDispatcher(Dispatcher* dispatcher) {
     this->dispatcher_ = dispatcher;
 }
 
-/**
- * 
- * @param pool
- */
-void Session::setSessionPool(std::vector<Session*>* pool) {
-    this->session_pool_ = pool;
-}

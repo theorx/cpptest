@@ -1,36 +1,26 @@
-/* 
- * File:   Dispatcher.cpp
- * Author: orx
- * 
- * Created on August 24, 2014, 2:01 PM
- */
-
 #include "Dispatcher.h"
-#include <cstdlib>
-#include <string>
-#include <string.h>
 
 /**
- * 
+ * @author Lauri Orgla
  */
 Dispatcher::Dispatcher() {
 }
 
 /**
- * 
+ * @author Lauri Orgla
  * @param orig
  */
 Dispatcher::Dispatcher(const Dispatcher& orig) {
 }
 
 /**
- * 
+ * @author Lauri Orgla
  */
 Dispatcher::~Dispatcher() {
     /**
      * Deletes all
      */
-    for (std::map<std::string, class HandlerBase * >::iterator it = this->handlers.begin(); it != this->handlers.end(); ++it) {
+    for (std::map<std::string, HandlerBase * >::iterator it = this->handlers.begin(); it != this->handlers.end(); ++it) {
         delete it->second;
     }
 }
@@ -50,24 +40,29 @@ void Dispatcher::registerHandler(std::string name, HandlerBase* handler) {
     /**conversion end*/
 
     if (handlers.find(name) == handlers.end()) {
+        std::cout << "[System] Registrering handler: " << name << " ... done!" << std::endl;
         handlers.insert(std::pair<std::string, HandlerBase*>(name, handler));
     } else {
         //deletes handler in case if handler is not added to map
         //Garbage collection.
         delete handler;
-        std::cout << "Handler with name " << name << " Is already registered." << std::endl;
+        std::cout << "[System] Handler with name " << name << " Is already registered." << std::endl;
     }
 }
 
 /**
- * Handle 
- * 
+ * @todo Refactor Dispatcher::handle parameters into data struct
+ */
+
+/**
  * @author Lauri Orgla
  * 
  * @param message
  * @param result
+ * @param self
+ * @param session_pool
  */
-void Dispatcher::handle(std::string message, std::string *result) {
+void Dispatcher::handle(std::string message, std::string *result, Session* self, std::vector<Session*> *session_pool) {
     //Remove newline characters
     for (int i = 0; i < message.length(); i++) {
         if (message[i] == '\n') {
@@ -79,7 +74,7 @@ void Dispatcher::handle(std::string message, std::string *result) {
     parseMessage(message, action, body);
 
     if (handlers.find(action) != handlers.end()) {
-        handlers.find(action)->second->run(message, result);
+        handlers.find(action)->second->run(body, result, self, session_pool);
     } else {
         *result = "ERROR\n";
     }
@@ -103,6 +98,7 @@ void Dispatcher::parseMessage(std::string input, std::string& action, std::strin
     char *token;
     //bodyVec holds all body pieces after tokenizing, so body could be built later.
     std::vector<std::string> bodyVec;
+
     //Locale for converting action to uppercase
     std::locale locale;
 

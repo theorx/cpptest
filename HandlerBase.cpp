@@ -1,38 +1,43 @@
-/* *
- * File:   HandlerBase.cpp
- * Author: orx
- * 
- * Created on August 24, 2014, 2:02 PM
- */
-
 #include "HandlerBase.h"
+#include "Session.h"
 
 /**
- * 
+ * @author Lauri Orgla 
  */
 HandlerBase::HandlerBase() {
 }
 
 /**
- * 
+ * @author Lauri Orgla
  * @param orig
  */
 HandlerBase::HandlerBase(const HandlerBase& orig) {
 }
 
 /**
- * 
+ * @author Lauri Orgla
  */
 HandlerBase::~HandlerBase() {
 }
 
-void HandlerBase::run(std::string message, std::string *result) {
-    std::cout << "Running handler.." << message << std::endl;
-    *result = "GET sample result yo nigger.. or something\n";
-
+/**
+ * @example orx@OrX:~$ echo -e "get clients\n" | nc 127.0.0.1 22
+CONNECTED CLIENTS: 18
+ * 
+ * @author Lauri Orgla
+ * @param message
+ * @param result
+ */
+void HandlerBase::run(std::string message, std::string* result, Session* self, std::vector<Session*>* session_pool) {
+    std::cout << "[Handler: GET] Input: " << message << std::endl;
     char buffer[256];
-    buffer[0] = '\0';
-    snprintf(buffer, sizeof (buffer), "Message received: %s", message.c_str());
+
+    if (message == "clients") {
+        snprintf(buffer, sizeof (buffer), "CONNECTED CLIENTS: %i\n", session_pool->size() - 1); //exclude current connection
+    } else {
+        snprintf(buffer, sizeof (buffer), "[Handler: GET] Message received: %s\n", message.c_str());
+    }
+    self->socket().close();
 
     *result = buffer;
 }
