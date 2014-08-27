@@ -60,10 +60,16 @@ void Session::handle_read(const boost::system::error_code& error, size_t bytes_t
     if (!error) {
         //Pass message to dispatcher for parsing and dispatching with handler
         std::string result;
-        std::string message = this->data_;
+
+        Message msg;
+        msg.message = this->data_;
+        msg.result = &result;
+        msg.self = this;
+        msg.session_pool = this->session_pool;
 
         memset(this->data_, 0, sizeof (this->data_));
-        this->dispatcher_->handle(message, &result, this, this->session_pool);
+        // this->dispatcher_->handle(message, &result, this, this->session_pool);
+        this->dispatcher_->handle(&msg);
 
         boost::asio::async_write(this->socket_,
                 boost::asio::buffer(result.c_str(), result.length()),

@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>Dispatcher.h</itemPath>
       <itemPath>HandlerBase.h</itemPath>
+      <itemPath>Message.h</itemPath>
       <itemPath>Server.h</itemPath>
       <itemPath>Session.h</itemPath>
     </logicalFolder>
@@ -58,6 +59,8 @@
       </item>
       <item path="HandlerBase.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Message.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Server.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Server.h" ex="false" tool="3" flavor2="0">
@@ -98,6 +101,8 @@
       <item path="HandlerBase.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="HandlerBase.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Message.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="Server.cpp" ex="false" tool="1" flavor2="0">
       </item>

@@ -47,4 +47,5 @@ int main(int argc, char* argv[]) {
  */
 void setupHandlers(Dispatcher &dispatcher) {
     dispatcher.registerHandler("GET", new HandlerBase());
+
 }

@@ -8,6 +8,10 @@
 #include <string>
 #include <string.h>
 #include "HandlerBase.h"
+#include "Message.h"
+
+class HandlerBase;
+struct Message;
 
 class Dispatcher {
 public:
@@ -15,7 +19,7 @@ public:
     Dispatcher(const Dispatcher& orig);
     virtual ~Dispatcher();
     void registerHandler(std::string name, HandlerBase *handler);
-    void handle(std::string message, std::string *result, Session* self, std::vector<Session*> *session_pool);
+    void handle(Message *msg);
 private:
     void parseMessage(std::string input, std::string &action, std::string &body);
     std::map <std::string, class HandlerBase *> handlers;

@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <vector>
+#include "Message.h"
 
 class Session;
 
@@ -13,7 +14,7 @@ public:
     HandlerBase();
     HandlerBase(const HandlerBase& orig);
     virtual ~HandlerBase();
-    virtual void run(std::string message, std::string *result, Session* self, std::vector<Session*> *session_pool);
+    virtual void run(Message *msg);
 private:
 
 };

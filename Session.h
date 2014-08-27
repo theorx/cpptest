@@ -3,8 +3,10 @@
 
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
+#include "Message.h"
 #include "Dispatcher.h"
 
+class Dispatcher;
 using boost::asio::ip::tcp;
 
 class Session {

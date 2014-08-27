@@ -28,16 +28,16 @@ CONNECTED CLIENTS: 18
  * @param message
  * @param result
  */
-void HandlerBase::run(std::string message, std::string* result, Session* self, std::vector<Session*>* session_pool) {
-    std::cout << "[Handler: GET] Input: " << message << std::endl;
+void HandlerBase::run(Message *msg) {
+    std::cout << "[Handler: GET] Input: " << msg->message << std::endl;
     char buffer[256];
-
-    if (message == "clients") {
-        snprintf(buffer, sizeof (buffer), "CONNECTED CLIENTS: %i\n", session_pool->size() - 1); //exclude current connection
+    std::cout << msg->message << std::endl;
+    if (msg->message == "clients") {
+        snprintf(buffer, sizeof (buffer), "CONNECTED CLIENTS: %i\n", msg->session_pool->size() - 1); //exclude current connection
     } else {
-        snprintf(buffer, sizeof (buffer), "[Handler: GET] Message received: %s\n", message.c_str());
+        snprintf(buffer, sizeof (buffer), "[Handler: GET] Message received: %s\n", msg->message.c_str());
     }
-    self->socket().close();
+    //  msg->self->socket().close();
 
-    *result = buffer;
+    *msg->result = buffer;
 }

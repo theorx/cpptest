@@ -51,10 +51,6 @@ void Dispatcher::registerHandler(std::string name, HandlerBase* handler) {
 }
 
 /**
- * @todo Refactor Dispatcher::handle parameters into data struct
- */
-
-/**
  * @author Lauri Orgla
  * 
  * @param message
@@ -62,21 +58,21 @@ void Dispatcher::registerHandler(std::string name, HandlerBase* handler) {
  * @param self
  * @param session_pool
  */
-void Dispatcher::handle(std::string message, std::string *result, Session* self, std::vector<Session*> *session_pool) {
+void Dispatcher::handle(Message *msg) {
     //Remove newline characters
-    for (int i = 0; i < message.length(); i++) {
-        if (message[i] == '\n') {
-            message[i] = ' ';
+    for (int i = 0; i < msg->message.length(); i++) {
+        if (msg->message[i] == '\n') {
+            msg->message[i] = ' ';
         }
     }
     std::string body;
     std::string action;
-    parseMessage(message, action, body);
-
+    parseMessage(msg->message, action, body);
+    msg->message = body;
     if (handlers.find(action) != handlers.end()) {
-        handlers.find(action)->second->run(body, result, self, session_pool);
+        handlers.find(action)->second->run(msg);
     } else {
-        *result = "ERROR\n";
+        *msg->result = "ERROR\n";
     }
 }
 
