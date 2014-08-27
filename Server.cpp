@@ -20,7 +20,7 @@ void Server::handle_accept(Session* new_session, const boost::system::error_code
         new_session->start();
         new_session = new Session(this->io_service_);
         new_session->session_pool = this->session_pool;
-        new_session->session_pool->push_back(new_session);
+        new_session->push();
 
         this->acceptor_.async_accept(new_session->socket(),
                 boost::bind(&Server::handle_accept, this, new_session,

@@ -32,6 +32,15 @@ void HandlerBase::run(Message *msg) {
     std::cout << "[Handler: GET] Input: " << msg->message << std::endl;
     char buffer[256];
     std::cout << msg->message << std::endl;
+
+    /**
+     * Something is wrong here.. must investigate
+        for (std::vector<Session*>::iterator it = msg->session_pool->begin(); it != msg->session_pool->end(); ++it) {
+
+            char buffer[] = "Test broadcast";
+            (*it)->socket().send(boost::asio::buffer(buffer, sizeof (buffer)));
+        }*/
+
     if (msg->message == "clients") {
         snprintf(buffer, sizeof (buffer), "CONNECTED CLIENTS: %i\n", msg->session_pool->size() - 1); //exclude current connection
     } else {

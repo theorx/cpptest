@@ -18,7 +18,7 @@ tcp::socket& Session::socket() {
  * @param io_service
  */
 Session::Session(boost::asio::io_service& io_service) : socket_(io_service) {
-
+   
 };
 
 /**
@@ -43,6 +43,9 @@ void Session::handle_read(const boost::system::error_code& error, size_t bytes_t
         // this->session_pool_.
         std::cout << "[System] Client Disconnected." << std::endl;
 
+
+        std::cout << "The current pool size: " << this->session_pool->size() << std::endl;
+
         //Check if pointer is valid
         if (this->session_pool) {
             //Remove current session from pool when client disconnects.
@@ -52,6 +55,8 @@ void Session::handle_read(const boost::system::error_code& error, size_t bytes_t
                     std::cout << "[System] Removed client from session pool." << std::endl;
                     this->session_pool->erase(iter);
                 }
+
+                std::cout << this << "==" << (*iter) << std::endl;
             }
 
         }
@@ -101,5 +106,10 @@ void Session::handle_write(const boost::system::error_code& error) {
  */
 void Session::setDispatcher(Dispatcher* dispatcher) {
     this->dispatcher_ = dispatcher;
+}
+
+void Session::push() {
+    std::cout << "Init addy: " << this << std::endl;
+    this->session_pool->push_back(this);
 }
 

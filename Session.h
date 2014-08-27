@@ -18,6 +18,7 @@ public:
     void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
     void handle_write(const boost::system::error_code& error);
     void setDispatcher(Dispatcher *dispatcher);
+    void push();
     std::vector<Session *> *session_pool;
 private:
     tcp::socket socket_;
